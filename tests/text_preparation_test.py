@@ -1,4 +1,4 @@
-from src.text_preparation import (get_normalized_words, get_cleaned_text)
+from src.text_preparation import TextHandler
 import unittest
 
 
@@ -7,18 +7,19 @@ class TestTextPreparation(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestTextPreparation, self).__init__(*args, **kwargs)
         self.text = "Привет из Южного Урала!"
-        self.cleaned_text = "Привет из Южного Урала"
+        self.textHandler = TextHandler(self.text)
 
     def test_text_preparation(self):
-        normalized_words = get_normalized_words(self.cleaned_text)
-        expected_result = ["привет", "из", "южный", "урал"]
+        normalized_words = self.textHandler.get_normalized_words()
+        expected_result = ["привет", "из", "южный", "урала!"]
         self.assertEqual(normalized_words, expected_result)
 
-        normalized_words = get_normalized_words(self.cleaned_text, excluded_pos=["ADJF"])
-        expected_result = ["привет", "из", "урал"]
+        normalized_words = self.textHandler.get_normalized_words(excluded_pos=["ADJF"])
+        expected_result = ["привет", "из", "урала!"]
         self.assertEqual(normalized_words, expected_result)
 
     def test_get_cleaned_text(self):
-        actual_text = get_cleaned_text(self.text)
-        self.assertEqual(actual_text, self.cleaned_text)
+        actual_text = self.textHandler.get_cleaned_text()
+        cleaned_text = "Привет из Южного Урала"
+        self.assertEqual(actual_text, cleaned_text)
 

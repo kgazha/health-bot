@@ -10,13 +10,11 @@ russian_stopwords = stopwords.words("russian")
 class TextHandler:
     def __init__(self, text: str):
         self.text = text
-        self.cleaned_text = ""
-        self.normalized_words = []
 
-    def get_normalized_words(self, excluded_pos=None):
+    def get_normalized_words(self, excluded_pos=None) -> []:
         if excluded_pos is None:
             excluded_pos = []
-        self.normalized_words = []
+        normalized_words = []
         for word in self.text.split():
             normal_form = None
             for parsed_word in morph.parse(word):
@@ -25,8 +23,10 @@ class TextHandler:
                 normal_form = parsed_word.normal_form
                 break
             if normal_form:
-                self.normalized_words.append(normal_form)
+                normalized_words.append(normal_form)
+        return normalized_words
 
-    def get_cleaned_text(self, text: str):
+    def get_cleaned_text(self) -> str:
         translator = str.maketrans({key: " " for key in punctuation})
-        self.cleaned_text = " ".join(text.translate(translator).split())
+        cleaned_text = " ".join(self.text.translate(translator).split())
+        return cleaned_text
