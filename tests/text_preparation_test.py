@@ -23,3 +23,8 @@ class TestTextPreparation(unittest.TestCase):
         cleaned_text = "Привет из Южного Урала"
         self.assertEqual(actual_text, cleaned_text)
 
+    def test_split_text_by_separator(self):
+        self.textHandler.text = "Коронавирус, это что?|Что такое Коронавирус?|Что такое ковид?"
+        expected = ["Коронавирус, это что?", "Что такое Коронавирус?", "Что такое ковид?"]
+        sentences = self.textHandler.split_text_by_separator("|")
+        self.assertEqual(sentences, expected)

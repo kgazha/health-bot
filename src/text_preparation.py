@@ -30,3 +30,7 @@ class TextHandler:
         translator = str.maketrans({key: " " for key in punctuation})
         cleaned_text = " ".join(self.text.translate(translator).split())
         return cleaned_text
+    
+    def split_text_by_separator(self, separator: str) -> []:
+        sentences = self.text.split(sep=separator)
+        return sentences
