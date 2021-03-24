@@ -1,7 +1,8 @@
 from src.interfaces.df_manager_interface import DataFrameManagerInterface
 from src.interfaces.text_handler_interface import TextHandlerInterface
 
-from pandas import DataFrame
+from pandas import DataFrame, Series
+import pandas as pd
 
 
 class DataFrameManager(DataFrameManagerInterface):
@@ -10,10 +11,12 @@ class DataFrameManager(DataFrameManagerInterface):
         self.df = df
         self._text_handler = text_handler
 
-    def split_data_in_column(self, target_column: int, separator: str, new_column_name: str):
-        sentences = []
-        for sentence in self.df.iloc[:, target_column]:
-            text = self._text_handler.split_text_by_separator(sentence, separator)
-            sentences.append(text)
-        # assert len(sentences) == self.df.shape[0]
-        self.df[new_column_name] = sentences
+    def split_data_in_column(self, target_column: int, separator: str):
+        _df = pd.DataFrame()
+        for (idx, row) in self.df.iterrows():
+            sentences = self._text_handler.split_text_by_separator(row[target_column], separator)
+            for sentence in sentences:
+                row[target_column] = sentence
+                _df = _df.append(pd.DataFrame([row], columns=self.df.columns), ignore_index=True)
+        self.df = _df
+

@@ -2,6 +2,7 @@ from src.analysis.df_manager import DataFrameManager
 from src.analysis.base_text_handler import TextHandler
 
 from pandas import DataFrame
+from pandas.testing import assert_frame_equal
 import unittest
 
 
@@ -13,10 +14,10 @@ class DataFrameManagerTest(unittest.TestCase):
         self._df_manager = DataFrameManager(self.df, TextHandler())
 
     def test_split_data_in_column(self):
-        self._df_manager.split_data_in_column(1, "|", "new_column")
+        self._df_manager.split_data_in_column(1, "|")
         expected_df = DataFrame([["0", "1", "2"],
                                  ["0", "3", "2"],
                                  ["1", "2", "3"],
                                  ["6", "7", "8"],
                                  ["6", "1", "8"]])
-        self.assertEqual(self._df_manager.df, expected_df)
+        assert_frame_equal(self._df_manager.df, expected_df)
