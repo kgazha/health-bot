@@ -11,7 +11,7 @@ class DataFrameManager(DataFrameManagerInterface):
         self.df = df
         self._text_handler = text_handler
 
-    def split_data_in_column(self, target_column: int, separator: str):
+    def transform_by_splitting_column(self, target_column: int, separator: str):
         _df = pd.DataFrame()
         for (idx, row) in self.df.iterrows():
             sentences = self._text_handler.split_text_by_separator(row[target_column], separator)

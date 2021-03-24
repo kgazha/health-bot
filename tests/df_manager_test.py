@@ -13,8 +13,8 @@ class DataFrameManagerTest(unittest.TestCase):
         self.df = DataFrame([["0", "1|3", "2"], ["1", "2", "3"], ["6", "7|1", "8"]])
         self._df_manager = DataFrameManager(self.df, TextHandler())
 
-    def test_split_data_in_column(self):
-        self._df_manager.split_data_in_column(1, "|")
+    def test_transform_by_splitting_column(self):
+        self._df_manager.transform_by_splitting_column(1, "|")
         expected_df = DataFrame([["0", "1", "2"],
                                  ["0", "3", "2"],
                                  ["1", "2", "3"],
