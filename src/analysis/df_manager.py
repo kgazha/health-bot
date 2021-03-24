@@ -10,5 +10,10 @@ class DataFrameManager(DataFrameManagerInterface):
         self.df = df
         self._text_handler = text_handler
 
-    def split_data_in_column(self, target_column: int, new_column_name: str):
-        pass
+    def split_data_in_column(self, target_column: int, separator: str, new_column_name: str):
+        sentences = []
+        for sentence in self.df.iloc[:, target_column]:
+            text = self._text_handler.split_text_by_separator(sentence, separator)
+            sentences.append(text)
+        # assert len(sentences) == self.df.shape[0]
+        self.df[new_column_name] = sentences
