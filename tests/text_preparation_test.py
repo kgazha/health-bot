@@ -1,4 +1,4 @@
-from src.text_preparation import TextHandler
+from src.analysis.text_preparation import TextHandler
 import unittest
 
 

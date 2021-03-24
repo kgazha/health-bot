@@ -2,12 +2,13 @@ import pymorphy2
 from nltk.corpus import stopwords
 from string import punctuation
 
+from src.interfaces.text_handler_interface import TextHandlerInterface
 
 morph = pymorphy2.MorphAnalyzer()
 russian_stopwords = stopwords.words("russian")
 
 
-class TextHandler:
+class TextHandler(TextHandlerInterface):
     def __init__(self, text: str):
         self.text = text
 
@@ -31,6 +32,6 @@ class TextHandler:
         cleaned_text = " ".join(self.text.translate(translator).split())
         return cleaned_text
     
-    def split_text_by_separator(self, separator: str) -> []:
+    def split_text_by_separator(self, separator: str) -> list[str]:
         sentences = self.text.split(sep=separator)
         return sentences

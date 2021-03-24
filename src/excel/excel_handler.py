@@ -1,10 +1,10 @@
 import pandas
 from pandas import DataFrame
 
-from src.data_parser_interface import DataParserInterface
+from src.interfaces.df_extractor_interface import DataHandlerInterface
 
 
-class ExcelParser(DataParserInterface):
+class ExcelHandler(DataHandlerInterface):
 
     def __init__(self):
         self._full_file_name = None
@@ -15,3 +15,6 @@ class ExcelParser(DataParserInterface):
 
     def extract_data(self) -> DataFrame:
         return self._data_source
+
+    def save_data(self, full_file_name: str):
+        pass
