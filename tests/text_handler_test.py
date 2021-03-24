@@ -1,11 +1,11 @@
-from src.analysis.text_preparation import TextHandler
+from src.analysis.text_handler import TextHandler
 import unittest
 
 
-class TestTextPreparation(unittest.TestCase):
+class TestTextHandler(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
-        super(TestTextPreparation, self).__init__(*args, **kwargs)
+        super(TestTextHandler, self).__init__(*args, **kwargs)
         self.text = "Привет из Южного Урала!"
         self.textHandler = TextHandler(self.text)
 
