@@ -2,6 +2,8 @@ import pymorphy2
 from nltk.corpus import stopwords
 from string import punctuation
 
+from typing import List
+
 from src.interfaces.text_handler_interface import TextHandlerInterface
 
 morph = pymorphy2.MorphAnalyzer()
@@ -11,9 +13,8 @@ russian_stopwords = stopwords.words("russian")
 class TextHandler(TextHandlerInterface):
     def __init__(self):
         pass
-        # self.text = text
 
-    def get_normalized_words(self, text: str, excluded_pos=None) -> list[str]:
+    def get_normalized_words(self, text: str, excluded_pos=None) -> List[str]:
         if excluded_pos is None:
             excluded_pos = []
         normalized_words = []
@@ -33,6 +34,6 @@ class TextHandler(TextHandlerInterface):
         cleaned_text = " ".join(text.translate(translator).split())
         return cleaned_text
     
-    def split_text_by_separator(self, text: str, separator: str) -> list[str]:
+    def split_text_by_separator(self, text: str, separator: str) -> List[str]:
         sentences = text.split(sep=separator)
         return sentences
