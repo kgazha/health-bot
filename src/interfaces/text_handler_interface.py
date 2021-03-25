@@ -10,3 +10,6 @@ class TextHandlerInterface:
 
     def split_text_by_separator(self, text: str, separator: str) -> List[str]:
         pass
+
+    def get_ngrams(self, words: List[str], n: int, max_ngrams: int = None) -> List[List[str]]:
+        pass
