@@ -21,3 +21,10 @@ class DataFrameManagerTest(unittest.TestCase):
                                  ["6", "7", "8"],
                                  ["6", "1", "8"]])
         assert_frame_equal(self._df_manager.df, expected_df)
+
+    def test_cut_column_by_splitting(self):
+        self._df_manager.cut_column_by_splitting(1, "|", 1)
+        expected_df = DataFrame([["0", "1", "2"],
+                                 ["1", "2", "3"],
+                                 ["6", "7", "8"]])
+        assert_frame_equal(self._df_manager.df, expected_df)

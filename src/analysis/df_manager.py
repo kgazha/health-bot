@@ -21,7 +21,7 @@ class DataFrameManager(DataFrameManagerInterface):
                 _df = _df.append(pd.DataFrame([row], columns=self.df.columns), ignore_index=True)
         self.df = _df
 
-    def generate_new_data(self, target_column: Union[int, str], ngram, max_ngrams):
+    def generate_new_data_ngrams(self, target_column: Union[int, str], ngram, max_ngrams):
         _df = pd.DataFrame()
         for (idx, row) in self.df.iterrows():
             sentences = self._text_handler.get_ngrams(row[target_column], ngram, max_ngrams)
@@ -29,3 +29,7 @@ class DataFrameManager(DataFrameManagerInterface):
                 row[target_column] = sentence
                 _df = _df.append(pd.DataFrame([row], columns=self.df.columns), ignore_index=True)
         self.df = _df
+
+    def cut_column_by_splitting(self, target_column: Union[int, str], separator: str, max_values: int):
+        self.df[target_column] = self.df[target_column]\
+            .apply(lambda x: separator.join(x.split(separator)[:max_values]))
