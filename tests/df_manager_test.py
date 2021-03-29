@@ -1,5 +1,5 @@
 from src.analysis.df_manager import DataFrameManager
-from src.analysis.base_text_handler import TextHandler
+from src.handlers.base_text_handler import TextHandler
 
 from pandas import DataFrame
 from pandas.testing import assert_frame_equal

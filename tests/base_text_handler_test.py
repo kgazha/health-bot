@@ -1,4 +1,4 @@
-from src.analysis.base_text_handler import TextHandler
+from src.handlers.base_text_handler import TextHandler
 import unittest
 
 

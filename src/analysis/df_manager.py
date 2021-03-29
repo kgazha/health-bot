@@ -10,6 +10,7 @@ class DataFrameManager(DataFrameManagerInterface):
 
     def __init__(self, df: DataFrame, text_handler: TextHandlerInterface):
         self.df = df
+        self._original_df = df
         self._text_handler = text_handler
 
     def transform_by_splitting_column(self, target_column: Union[int, str], separator: str):
@@ -23,12 +24,12 @@ class DataFrameManager(DataFrameManagerInterface):
 
     def generate_new_data_ngrams(self, target_column: Union[int, str], ngram, max_ngrams):
         _df = pd.DataFrame()
-        for (idx, row) in self.df.iterrows():
-            sentences = self._text_handler.get_ngrams(row[target_column], ngram, max_ngrams)
+        for (idx, row) in self._original_df.iterrows():
+            sentences = self._text_handler.get_ngrams(row[target_column].split(), ngram, max_ngrams)
             for sentence in sentences:
-                row[target_column] = sentence
+                row[target_column] = " ".join(sentence)
                 _df = _df.append(pd.DataFrame([row], columns=self.df.columns), ignore_index=True)
-        self.df = _df
+        self.df = pd.concat([self.df, _df], ignore_index=True)
 
     def cut_column_by_splitting(self, target_column: Union[int, str], separator: str, max_values: int):
         self.df[target_column] = self.df[target_column]\
