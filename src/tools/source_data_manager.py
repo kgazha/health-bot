@@ -2,7 +2,7 @@ import pickle
 from pandas import DataFrame
 from functools import singledispatch
 
-from interfaces.data_handler_interface import DataHandlerInterface
+from src.interfaces.data_handler_interface import DataHandlerInterface
 
 
 @singledispatch
@@ -13,13 +13,19 @@ def save_to_pickle(data_handler: DataHandlerInterface, source_filename: str, des
         pickle.dump(df, file)
 
 
-@save_to_pickle.register
-def save_to_pickle(df: DataFrame, destination_filename: str) -> None:
+@save_to_pickle.register(DataFrame)
+def _save_to_pickle(df: DataFrame, destination_filename: str) -> None:
     with open(destination_filename, "wb+") as file:
         pickle.dump(df, file)
 
 
-def load_from_pickle(source_filename: str) -> DataFrame:
+@save_to_pickle.register(list)
+def _save_to_pickle(data: list, destination_filename: str) -> None:
+    with open(destination_filename, "wb+") as file:
+        pickle.dump(data, file)
+
+
+def load_from_pickle(source_filename: str):
     with open(source_filename, "rb") as file:
-        df = pickle.load(file)
-    return df
+        data = pickle.load(file)
+    return data

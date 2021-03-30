@@ -1,7 +1,7 @@
 import pandas
 from pandas import DataFrame
 
-from interfaces.data_handler_interface import DataHandlerInterface
+from src.interfaces.data_handler_interface import DataHandlerInterface
 
 
 class ExcelHandler(DataHandlerInterface):
