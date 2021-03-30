@@ -2,7 +2,7 @@ import pickle
 from pandas import DataFrame
 from functools import singledispatch
 
-from src.interfaces.data_handler_interface import DataHandlerInterface
+from interfaces.data_handler_interface import DataHandlerInterface
 
 
 @singledispatch
