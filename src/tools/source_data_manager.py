@@ -1,10 +1,10 @@
 import pickle
 from typing import Union
 
-from pandas import DataFrame
+from pandas import DataFrame, Series
 
 
-def save_to_pickle(data: Union[DataFrame, list], destination_filename: str) -> None:
+def save_to_pickle(data: Union[Series, DataFrame, list], destination_filename: str) -> None:
     with open(destination_filename, "wb+") as file:
         pickle.dump(data, file)
 
