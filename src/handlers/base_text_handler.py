@@ -1,5 +1,4 @@
 import pymorphy2
-from nltk.corpus import stopwords
 from nltk import ngrams
 from string import punctuation
 from typing import List
@@ -7,7 +6,6 @@ from typing import List
 from src.interfaces.text_handler_interface import TextHandlerInterface
 
 morph = pymorphy2.MorphAnalyzer()
-russian_stopwords = stopwords.words("russian")
 
 
 class TextHandler(TextHandlerInterface):
