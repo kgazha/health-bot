@@ -14,4 +14,7 @@ def save_dump(filename: str, data_handler: DataHandlerInterface):
     save_to_pickle(df, target_filename)
 
 
+if not os.path.exists(SOURCE_DATA_DIR):
+    os.mkdir(SOURCE_DATA_DIR)
+
 save_dump(SOURCE_EXCEL_FILENAME, ExcelHandler())
