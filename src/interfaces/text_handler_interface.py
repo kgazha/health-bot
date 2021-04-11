@@ -2,6 +2,7 @@ from typing import List
 
 
 class TextHandlerInterface:
+
     def get_normalized_words(self, text: str, excluded_pos=None) -> List[str]:
         pass
 

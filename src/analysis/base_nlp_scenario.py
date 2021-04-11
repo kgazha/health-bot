@@ -4,23 +4,27 @@ import nltk
 from src.analysis.df_manager import DataFrameManager
 from src.handlers.base_text_handler import TextHandler
 from src.tools.source_data_manager import load_from_pickle, save_to_pickle
-from src.settings import SOURCE_DATA_DIR, DATAFRAME_FILENAME, QUESTIONS_COLUMN, SEPARATOR, ANSWERS_COLUMN, \
-    DATA_MODEL_FILENAME
+from src.settings import SOURCE_DATA_DIR, DATAFRAME_FILENAME, DATA_MODEL_FILENAME
 import numpy as np
 from keras.models import Sequential
 import tensorflow as tf
 
 
-text_handler = TextHandler()
-df = load_from_pickle(os.path.join(SOURCE_DATA_DIR, DATAFRAME_FILENAME))
-df_manager = DataFrameManager(df, text_handler)
+# DataFrame parameters
+ANSWERS_COLUMN = "answer_text"
+QUESTIONS_COLUMN = "sample_phrases"
+SEPARATOR = "|"
 
-df_manager.cut_column_by_splitting(QUESTIONS_COLUMN, SEPARATOR, max_values=1)
-df_manager.generate_new_data_ngrams(QUESTIONS_COLUMN, ngram=3, max_ngrams=3)
+text_handler = TextHandler()
+
+df = load_from_pickle(os.path.join(SOURCE_DATA_DIR, DATAFRAME_FILENAME))
+df_manager = DataFrameManager(text_handler)
+df_manager.cut_column_by_splitting(df, QUESTIONS_COLUMN, SEPARATOR, max_values=1)
+df = df_manager.generate_new_df_by_ngrams(df, QUESTIONS_COLUMN, ngram=3, max_ngrams=3)
 
 questions = []
-answers = df_manager.df[ANSWERS_COLUMN]
-for (idx, row) in df_manager.df.iterrows():
+answers = df[ANSWERS_COLUMN]
+for (idx, row) in df.iterrows():
     cleaned_text = text_handler.get_cleaned_text(row[QUESTIONS_COLUMN])
     normalized_words = text_handler.get_normalized_words(cleaned_text)
     questions.append(normalized_words)

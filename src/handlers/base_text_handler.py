@@ -9,6 +9,7 @@ morph = pymorphy2.MorphAnalyzer()
 
 
 class TextHandler(TextHandlerInterface):
+
     def __init__(self):
         pass
 
