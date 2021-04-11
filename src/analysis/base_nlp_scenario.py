@@ -4,9 +4,9 @@ import nltk
 from src.analysis.df_manager import DataFrameManager
 from src.handlers.base_text_handler import TextHandler
 from src.tools.source_data_manager import load_from_pickle, save_to_pickle
-from src.settings import SOURCE_DATA_DIR, DATAFRAME_FILENAME, DATA_MODEL_FILENAME
+from src.settings import SOURCE_DATA_DIR, DATAFRAME_FILENAME, DATA_MODEL_FILENAME, COVID_WORDS
 import numpy as np
-from keras.models import Sequential
+from tensorflow.keras.models import Sequential
 import tensorflow as tf
 
 
@@ -27,7 +27,9 @@ answers = df[ANSWERS_COLUMN]
 for (idx, row) in df.iterrows():
     cleaned_text = text_handler.get_cleaned_text(row[QUESTIONS_COLUMN])
     normalized_words = text_handler.get_normalized_words(cleaned_text)
-    questions.append(normalized_words)
+    normalized_words = text_handler.synonyms_transform(normalized_words, COVID_WORDS, COVID_WORDS[0])
+    question_words = text_handler.get_stemmed_words(normalized_words)
+    questions.append(question_words)
 
 documents = []
 classes = []
@@ -58,13 +60,12 @@ train_y = list(training[:, 1])
 
 model = Sequential()
 model.add(tf.keras.layers.Flatten())
-model.add(tf.keras.layers.Dense(128, input_shape=(len(train_x[0]),), activation='relu'))
+model.add(tf.keras.layers.Dense(256, input_shape=(len(train_x[0]),), activation='relu'))
 model.add(tf.keras.layers.Dropout(0.5))
-model.add(tf.keras.layers.Dense(64, activation='relu'))
+model.add(tf.keras.layers.Dense(256, activation='relu'))
 model.add(tf.keras.layers.Dropout(0.5))
 model.add(tf.keras.layers.Dense(len(train_y[0]), activation='softmax'))
 optimizer = tf.keras.optimizers.Adam(clipvalue=0.5)
-# sgd = tf.keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
 hist = model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=5, verbose=2)

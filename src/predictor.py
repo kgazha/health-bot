@@ -1,9 +1,9 @@
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 import numpy as np
 from src.handlers.base_text_handler import TextHandler
 import os
 
-from src.settings import SOURCE_DATA_DIR, DATA_MODEL_FILENAME
+from src.settings import SOURCE_DATA_DIR, DATA_MODEL_FILENAME, COVID_WORDS
 from src.tools.source_data_manager import load_from_pickle
 
 os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
@@ -15,7 +15,10 @@ text_handler = TextHandler()
 
 
 def bow(sentence, words, show_details=True):
-    sentence_words = text_handler.get_normalized_words(text_handler.get_cleaned_text(sentence))
+    cleaned_text = text_handler.get_cleaned_text(sentence)
+    normalized_words = text_handler.get_normalized_words(cleaned_text)
+    normalized_words = text_handler.synonyms_transform(normalized_words, COVID_WORDS, COVID_WORDS[0])
+    sentence_words = text_handler.get_stemmed_words(normalized_words)
     bag = [0] * len(words)
     for s in sentence_words:
         for i, w in enumerate(words):
