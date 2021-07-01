@@ -7,8 +7,8 @@ from src.settings import SOURCE_DATA_DIR, DATA_MODEL_FILENAME, COVID_WORDS
 from src.tools.source_data_manager import load_from_pickle
 
 os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 model = load_model(DATA_MODEL_FILENAME)
-answers = load_from_pickle(os.path.join(SOURCE_DATA_DIR, "answers.pkl"))
 words = load_from_pickle(os.path.join(SOURCE_DATA_DIR, "words.pkl"))
 classes = load_from_pickle(os.path.join(SOURCE_DATA_DIR, "classes.pkl"))
 text_handler = TextHandler()
@@ -37,5 +37,20 @@ def predict_class(sentence, model, show_details=False):
     results.sort(key=lambda x: x[1], reverse=True)
     return_list = []
     for r in results:
-        return_list.append({"answer": classes[r[0]], "probability": str(r[1])})
+        return_list.append({"answer": classes[r[0]], "probability": r[1]})
     return return_list
+
+
+while True:
+    try:
+        question = input("Введите свой вопрос: ").strip()
+        if question == "Q":
+            break
+        predicted = predict_class(question, model)
+        if len(predicted) != 0:
+            if predicted[0]["probability"] > 0.7:
+                print(predicted[0]['answer'])
+            else:
+                print("Ваш вопрос адресован специалисту технической поддержки.")
+    except ValueError:
+        break
