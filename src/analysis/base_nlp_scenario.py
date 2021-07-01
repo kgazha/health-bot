@@ -1,14 +1,13 @@
 import os
 from random import shuffle
 import nltk
-from src.analysis.df_manager import DataFrameManager
+from src.handlers.df_handler import DataFrameHandler
 from src.handlers.base_text_handler import TextHandler
 from src.tools.source_data_manager import load_from_pickle, save_to_pickle
 from src.settings import SOURCE_DATA_DIR, DATAFRAME_FILENAME, DATA_MODEL_FILENAME, COVID_WORDS
 import numpy as np
 from tensorflow.keras.models import Sequential
 import tensorflow as tf
-
 
 # DataFrame parameters
 ANSWERS_COLUMN = "answer_text"
@@ -18,9 +17,9 @@ SEPARATOR = "|"
 text_handler = TextHandler()
 
 df = load_from_pickle(os.path.join(SOURCE_DATA_DIR, DATAFRAME_FILENAME))
-df_manager = DataFrameManager(text_handler)
-df_manager.cut_column_by_splitting(df, QUESTIONS_COLUMN, SEPARATOR, max_values=1)
-df = df_manager.generate_new_df_by_ngrams(df, QUESTIONS_COLUMN, ngram=3, max_ngrams=3)
+df_handler = DataFrameHandler(text_handler)
+df_handler.cut_column_by_splitting(df, QUESTIONS_COLUMN, SEPARATOR, max_values=2)
+df = df_handler.generate_new_df_by_ngrams(df, QUESTIONS_COLUMN, ngram=3, max_ngrams=3)
 
 questions = []
 answers = df[ANSWERS_COLUMN]
@@ -60,9 +59,9 @@ train_y = list(training[:, 1])
 
 model = Sequential()
 model.add(tf.keras.layers.Flatten())
-model.add(tf.keras.layers.Dense(256, input_shape=(len(train_x[0]),), activation='relu'))
+model.add(tf.keras.layers.Dense(200, input_shape=(len(train_x[0]),), activation='relu'))
 model.add(tf.keras.layers.Dropout(0.5))
-model.add(tf.keras.layers.Dense(256, activation='relu'))
+model.add(tf.keras.layers.Dense(200, activation='relu'))
 model.add(tf.keras.layers.Dropout(0.5))
 model.add(tf.keras.layers.Dense(len(train_y[0]), activation='softmax'))
 optimizer = tf.keras.optimizers.Adam(clipvalue=0.5)

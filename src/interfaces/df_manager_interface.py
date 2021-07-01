@@ -2,7 +2,7 @@ from typing import Union
 from pandas import DataFrame
 
 
-class DataFrameManagerInterface:
+class DataFrameHandlerInterface:
 
     def transform_by_splitting_column(self, df, target_column: Union[int, str], separator: str):
         pass
