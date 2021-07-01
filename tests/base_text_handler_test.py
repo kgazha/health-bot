@@ -38,3 +38,9 @@ class BaseTextHandlerTest(unittest.TestCase):
                     ("перчатки", "не", "заразиться")]
         sentences = self.text_handler.get_ngrams(text.split(), n, max_ngrams)
         self.assertEqual(sentences, expected)
+
+    def test_get_navec_tokens(self):
+        words = ['привет', 'как', 'дела']
+        expected = [335377, 161623, 104167]
+        result = self.text_handler.get_navec_tokens(words)
+        self.assertEqual(result, expected)

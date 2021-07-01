@@ -5,14 +5,18 @@ from string import punctuation
 from typing import List
 from nltk.stem import SnowballStemmer
 from typing import get_origin
+from navec import Navec
 
+from src.settings import NAVEC_DATA_FILENAME, COVID_WORDS, COVID_TOKEN
 from src.interfaces.text_handler_interface import TextHandlerInterface
-
-morph = pymorphy2.MorphAnalyzer()
-snowball = SnowballStemmer(language="russian")
 
 
 class TextHandler(TextHandlerInterface):
+
+    def __init__(self):
+        self.morph = pymorphy2.MorphAnalyzer()
+        self.snowball = SnowballStemmer(language="russian")
+        self.navec = Navec.load(NAVEC_DATA_FILENAME)
 
     def get_normalized_words(self, text: str, excluded_pos=None) -> List[str]:
         if excluded_pos is None:
@@ -20,7 +24,7 @@ class TextHandler(TextHandlerInterface):
         normalized_words = []
         for word in text.split():
             normal_form = None
-            for parsed_word in morph.parse(word):
+            for parsed_word in self.morph.parse(word):
                 if parsed_word.tag.POS in excluded_pos:
                     continue
                 normal_form = parsed_word.normal_form
@@ -30,7 +34,7 @@ class TextHandler(TextHandlerInterface):
         return normalized_words
 
     def get_stemmed_words(self, words: List[str]) -> List[str]:
-        return [snowball.stem(word) for word in words]
+        return [self.snowball.stem(word) for word in words]
 
     def get_cleaned_text(self, text: str) -> str:
         translator = str.maketrans({key: " " for key in punctuation})
@@ -46,6 +50,13 @@ class TextHandler(TextHandlerInterface):
         if max_ngrams is not None:
             return sentences[:max_ngrams]
         return sentences
+
+    def get_navec_tokens(self, words: List[str]) -> List[int]:
+        tokens = []
+        [tokens.append(self.navec.vocab[word]) for word in words if word in self.navec.vocab]
+        if COVID_WORDS[0] in words:
+            tokens.append(COVID_TOKEN)
+        return tokens
 
     def synonyms_transform(self, input_data: Union[str, List[str]],
                            synonyms: List[str], target_word: str) -> List[str]:
